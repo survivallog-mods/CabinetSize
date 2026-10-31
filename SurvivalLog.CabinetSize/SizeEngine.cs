@@ -10,16 +10,8 @@ namespace SurvivalLog.CabinetSize;
 /// <summary>受管集发现 + 值解析 + 幂等改写 + trace 自证。机制与实证依据见 DESIGN.md §2/§5。</summary>
 internal static class SizeEngine
 {
-    /// <summary>黑名单 34 包（沿用 CabinetExpand 2026-10-13 口径，理由留档其 DESIGN §5；机器槽/非储物/边界容器/纯场景搜刮）。</summary>
-    internal static readonly int[] DefaultExcludeIds =
-    {
-        5001, 5002, 5003, 5004, 5005, 5006, 5011,       // 厨房电器（格子=烹饪槽位语义）
-        5007, 5008, 5009, 5014, 5015, 5017, 5020,       // 老鼠笼/粉碎机/口粮压制机/暖房工程台/酿酒桶
-        115004, 115002, 1050, 1062,                     // 堆肥箱/吊篮(种植)/通信设备
-        10001, 10004,                                   // 床/垃圾桶
-        1010, 2003, 1060, 1014, 1008, 1009, 115003, 3003, // 纸箱共包/门窗口暂存/无人机/货车/手推车
-        110007, 3001, 2001, 2002, 2004, 10003,          // 纯场景搜刮容器
-    };
+    /// <summary>黑名单 34 包＝套件单源 <see cref="BagTable.DefaultResizeExcludeIds"/>（ModShared；2026-11-01 上收：CabinetEverywhere 柜宽统一只抄了 23 包、直写共包 1010 伤及染料桶原料槽/工具台材料容器——同一名单两处维护必漏）。口径沿用 CabinetExpand 2026-10-13，理由留档 DESIGN §5.3。</summary>
+    internal static readonly int[] DefaultExcludeIds = BagTable.DefaultResizeExcludeIds;
 
     /// <summary>受管集：家具自动发现（BagId&gt;0）+ 载具（Config_Vehicle 全档 TrunkBagId + 门口袋 1023）− 黑名单 − cfg ExcludeIds + 个性化清单 id（最后注入，绕过黑名单——对纸箱/机器槽等同样生效）。null=配置表未就绪。</summary>
     internal static HashSet<int> DiscoverManaged(List<string> notes, out bool vehReady)
